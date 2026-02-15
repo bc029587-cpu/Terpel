@@ -2,6 +2,10 @@ const ServiceOrder = require('./service-order.model');
 
 class ServiceOrderRepository {
 
+  findAll() {
+    return ServiceOrder.find().sort({ createdAt: -1 });
+  }
+
   create(data) {
     return ServiceOrder.create(data);
   }

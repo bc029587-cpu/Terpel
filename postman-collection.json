@@ -1,0 +1,89 @@
+{
+  "info": {
+    "name": "Terpel API Collection",
+    "description": "Colección de endpoints para testing",
+    "version": "1.0.0"
+  },
+  "requests": [
+    {
+      "name": "Health Check",
+      "method": "GET",
+      "url": "{{baseUrl}}/health",
+      "headers": {},
+      "description": "Verificar que el servidor está activo"
+    },
+    {
+      "name": "Login",
+      "method": "POST",
+      "url": "{{baseUrl}}/api/auth/login",
+      "headers": {
+        "Content-Type": "application/json"
+      },
+      "body": {
+        "email": "admin@terpel.com",
+        "password": "admin123"
+      },
+      "description": "Obtener token JWT"
+    },
+    {
+      "name": "Verify Token",
+      "method": "GET",
+      "url": "{{baseUrl}}/api/auth/me",
+      "headers": {
+        "Authorization": "Bearer {{token}}"
+      },
+      "description": "Verificar información del usuario actual"
+    },
+    {
+      "name": "Get All Service Orders",
+      "method": "GET",
+      "url": "{{baseUrl}}/api/service-orders",
+      "headers": {
+        "Authorization": "Bearer {{token}}"
+      },
+      "description": "Listar todas las órdenes de servicio"
+    },
+    {
+      "name": "Create Service Order",
+      "method": "POST",
+      "url": "{{baseUrl}}/api/service-orders",
+      "headers": {
+        "Authorization": "Bearer {{token}}",
+        "Content-Type": "application/json"
+      },
+      "body": {
+        "stationId": "ESTACION_001",
+        "type": "INVOICE",
+        "description": "Factura de combustible",
+        "status": "CREATED"
+      },
+      "description": "Crear una nueva orden de servicio"
+    },
+    {
+      "name": "Get Service Order by ID",
+      "method": "GET",
+      "url": "{{baseUrl}}/api/service-orders/:id",
+      "headers": {
+        "Authorization": "Bearer {{token}}"
+      },
+      "description": "Obtener una orden de servicio por su ID"
+    },
+    {
+      "name": "Update Service Order Status",
+      "method": "PUT",
+      "url": "{{baseUrl}}/api/service-orders/:id/status",
+      "headers": {
+        "Authorization": "Bearer {{token}}",
+        "Content-Type": "application/json"
+      },
+      "body": {
+        "status": "IN_PROGRESS"
+      },
+      "description": "Actualizar el estado de una orden de servicio"
+    }
+  ],
+  "variables": {
+    "baseUrl": "http://localhost:4201",
+    "token": "paste_your_token_here_after_login"
+  }
+}

@@ -6,13 +6,17 @@ const cors = require('cors');
 const app = express();
 
 const authRoutes = require('./modules/auth/auth.routes');
+const serviceOrderRoutes = require('./modules/service-order/service-order.routes');
 const authMiddleware = require('./middlewares/auth.middleware');
+const requestId = require('./middlewares/request-id.middleware');
+const errorHandler = require('./middlewares/error.middleware');
 
 /* ======================
    Middlewares globales
 ====================== */
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json({ limit: '50mb' }));
+app.use(requestId);
 
 
 
@@ -35,6 +39,8 @@ app.get('/health', (req, res) => {
   });
 });
 
+
+
 // Endpoint protegido de prueba
 app.get('/api/protected', authMiddleware, (req, res) => {
   res.json({
@@ -43,9 +49,22 @@ app.get('/api/protected', authMiddleware, (req, res) => {
   });
 });
 
-// Aquí luego irán tus módulos
+/* ======================
+   Rutas de módulos
+====================== */
 app.use('/api/auth', authRoutes);
+app.use('/api/service-orders', serviceOrderRoutes);
 
+// Log de diagnóstico
+console.log('✓ Auth router montado en /api/auth');
+console.log('✓ Service Orders router montado en /api/service-orders');
 
+// Middleware 404 explícito
+app.use((req, res) => {
+  res.status(404).json({ error: 'Ruta no encontrada' });
+});
+
+// Middleware global de errores (debe ir al final)
+app.use(errorHandler);
 
 module.exports = app;

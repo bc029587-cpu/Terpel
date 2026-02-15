@@ -15,5 +15,8 @@ router.post('/', auth, controller.create);
 // 🔐 protegida
 router.get('/:id', auth, controller.getById);
 
+// 🔐 protegida - Actualizar estado de la orden
+router.put('/:id/status', auth, controller.updateStatus);
+
 module.exports = router;
 

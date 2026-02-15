@@ -1,12 +1,13 @@
 'use strict';
 
+require('dotenv').config();
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
 
 // Ajusta la ruta si cambia tu estructura
 const User = require('../modules/users/user.model');
 
-const MONGO_URI = 'mongodb://127.0.0.1:27017/terpel';
+const MONGO_URI = process.env.MONGO_URI || 'mongodb://127.0.0.1:27017/terpel';
 
 async function createAdmin() {
   try {
