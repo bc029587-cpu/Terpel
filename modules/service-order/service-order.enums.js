@@ -1,0 +1,4 @@
+module.exports = {
+  TYPES: ['INVOICE', 'SUPPORT', 'REDEMPTION'],
+  STATUS: ['CREATED', 'IN_PROGRESS', 'DONE', 'CANCELLED']
+};
