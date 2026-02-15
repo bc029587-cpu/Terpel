@@ -6,6 +6,7 @@ const authController = require('./auth.controller');
 const authMiddleware = require('../../middlewares/auth.middleware');
 
 router.post('/login', authController.login);
+router.post('/register', authController.register);
 
 // Endpoint protegido para verificar token
 router.get('/me', authMiddleware, (req, res) => {

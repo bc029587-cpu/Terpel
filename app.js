@@ -7,6 +7,7 @@ const app = express();
 
 const authRoutes = require('./modules/auth/auth.routes');
 const serviceOrderRoutes = require('./modules/service-order/service-order.routes');
+const userRoutes = require('./modules/users/user.routes');
 const authMiddleware = require('./middlewares/auth.middleware');
 const requestId = require('./middlewares/request-id.middleware');
 const errorHandler = require('./middlewares/error.middleware');
@@ -54,10 +55,12 @@ app.get('/api/protected', authMiddleware, (req, res) => {
 ====================== */
 app.use('/api/auth', authRoutes);
 app.use('/api/service-orders', serviceOrderRoutes);
+app.use('/api/users', userRoutes);
 
 // Log de diagnóstico
 console.log('✓ Auth router montado en /api/auth');
 console.log('✓ Service Orders router montado en /api/service-orders');
+console.log('✓ Users router montado en /api/users');
 
 // Middleware 404 explícito
 app.use((req, res) => {

@@ -32,6 +32,28 @@ async function login(email, password) {
   return token;
 }
 
+async function register(email, password, name) {
+  // Validar que el email no existe
+  const existingUser = await userService.findByEmail(email);
+  if (existingUser) {
+    throw new Error('El email ya está registrado');
+  }
+
+  // Encriptar contraseña
+  const passwordHash = await bcrypt.hash(password, 10);
+
+  // Crear usuario
+  const user = await userService.createUser({
+    email,
+    password: passwordHash,
+    name: name || email.split('@')[0],
+    role: 'USER'
+  });
+
+  return user;
+}
+
 module.exports = {
-  login
+  login,
+  register
 };

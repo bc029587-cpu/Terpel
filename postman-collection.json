@@ -1,19 +1,19 @@
 {
   "info": {
     "name": "Terpel API Collection",
-    "description": "Colección de endpoints para testing",
-    "version": "1.0.0"
+    "description": "Colección completa de endpoints para testing",
+    "version": "2.0.0"
   },
   "requests": [
     {
-      "name": "Health Check",
+      "name": "🔓 Health Check",
       "method": "GET",
       "url": "{{baseUrl}}/health",
       "headers": {},
       "description": "Verificar que el servidor está activo"
     },
     {
-      "name": "Login",
+      "name": "🔑 Auth - Login",
       "method": "POST",
       "url": "{{baseUrl}}/api/auth/login",
       "headers": {
@@ -21,21 +21,90 @@
       },
       "body": {
         "email": "admin@terpel.com",
-        "password": "admin123"
+        "password": "123456"
       },
       "description": "Obtener token JWT"
     },
     {
-      "name": "Verify Token",
+      "name": "🔑 Auth - Register",
+      "method": "POST",
+      "url": "{{baseUrl}}/api/auth/register",
+      "headers": {
+        "Content-Type": "application/json"
+      },
+      "body": {
+        "email": "newuser@ejemplo.com",
+        "password": "123456",
+        "name": "Nuevo Usuario"
+      },
+      "description": "Registrar nuevo usuario"
+    },
+    {
+      "name": "🔑 Auth - Me",
       "method": "GET",
       "url": "{{baseUrl}}/api/auth/me",
       "headers": {
         "Authorization": "Bearer {{token}}"
       },
-      "description": "Verificar información del usuario actual"
+      "description": "Obtener información del usuario actual"
     },
     {
-      "name": "Get All Service Orders",
+      "name": "👥 Users - Get All",
+      "method": "GET",
+      "url": "{{baseUrl}}/api/users",
+      "headers": {
+        "Authorization": "Bearer {{token}}"
+      },
+      "description": "Listar todos los usuarios"
+    },
+    {
+      "name": "👥 Users - Get by ID",
+      "method": "GET",
+      "url": "{{baseUrl}}/api/users/:id",
+      "headers": {
+        "Authorization": "Bearer {{token}}"
+      },
+      "description": "Obtener usuario por ID"
+    },
+    {
+      "name": "👥 Users - Update",
+      "method": "PUT",
+      "url": "{{baseUrl}}/api/users/:id",
+      "headers": {
+        "Authorization": "Bearer {{token}}",
+        "Content-Type": "application/json"
+      },
+      "body": {
+        "name": "Nombre Actualizado",
+        "email": "newemail@ejemplo.com"
+      },
+      "description": "Actualizar usuario"
+    },
+    {
+      "name": "👥 Users - Delete",
+      "method": "DELETE",
+      "url": "{{baseUrl}}/api/users/:id",
+      "headers": {
+        "Authorization": "Bearer {{token}}"
+      },
+      "description": "Eliminar usuario (soft delete)"
+    },
+    {
+      "name": "👥 Users - Change Password",
+      "method": "POST",
+      "url": "{{baseUrl}}/api/users/change-password",
+      "headers": {
+        "Authorization": "Bearer {{token}}",
+        "Content-Type": "application/json"
+      },
+      "body": {
+        "currentPassword": "123456",
+        "newPassword": "nuevacontraseña123"
+      },
+      "description": "Cambiar contraseña del usuario actual"
+    },
+    {
+      "name": "📦 Service Orders - Get All",
       "method": "GET",
       "url": "{{baseUrl}}/api/service-orders",
       "headers": {
@@ -44,7 +113,7 @@
       "description": "Listar todas las órdenes de servicio"
     },
     {
-      "name": "Create Service Order",
+      "name": "📦 Service Orders - Create",
       "method": "POST",
       "url": "{{baseUrl}}/api/service-orders",
       "headers": {
@@ -52,24 +121,23 @@
         "Content-Type": "application/json"
       },
       "body": {
-        "stationId": "ESTACION_001",
-        "type": "INVOICE",
-        "description": "Factura de combustible",
-        "status": "CREATED"
+        "title": "Orden de Servicio #001",
+        "description": "Mantenimiento de estación",
+        "status": "PENDING"
       },
-      "description": "Crear una nueva orden de servicio"
+      "description": "Crear nueva orden de servicio"
     },
     {
-      "name": "Get Service Order by ID",
+      "name": "📦 Service Orders - Get by ID",
       "method": "GET",
       "url": "{{baseUrl}}/api/service-orders/:id",
       "headers": {
         "Authorization": "Bearer {{token}}"
       },
-      "description": "Obtener una orden de servicio por su ID"
+      "description": "Obtener orden de servicio por ID"
     },
     {
-      "name": "Update Service Order Status",
+      "name": "📦 Service Orders - Update Status",
       "method": "PUT",
       "url": "{{baseUrl}}/api/service-orders/:id/status",
       "headers": {
@@ -79,7 +147,31 @@
       "body": {
         "status": "IN_PROGRESS"
       },
-      "description": "Actualizar el estado de una orden de servicio"
+      "description": "Actualizar estado de orden de servicio"
+    },
+    {
+      "name": "📦 Service Orders - Update",
+      "method": "PUT",
+      "url": "{{baseUrl}}/api/service-orders/:id",
+      "headers": {
+        "Authorization": "Bearer {{token}}",
+        "Content-Type": "application/json"
+      },
+      "body": {
+        "title": "Nuevo Título",
+        "description": "Nueva descripción",
+        "status": "PENDING"
+      },
+      "description": "Actualizar orden de servicio completa"
+    },
+    {
+      "name": "📦 Service Orders - Delete",
+      "method": "DELETE",
+      "url": "{{baseUrl}}/api/service-orders/:id",
+      "headers": {
+        "Authorization": "Bearer {{token}}"
+      },
+      "description": "Eliminar orden de servicio"
     }
   ],
   "variables": {

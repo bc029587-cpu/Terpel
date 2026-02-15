@@ -1,11 +1,39 @@
+'use strict';
+
 const mongoose = require('mongoose');
-const { TYPES, STATUS } = require('./service-order.enums');
 
-const schema = new mongoose.Schema({
-  stationId: { type: String, required: true },
-  type: { type: String, enum: TYPES, required: true },
-  description: { type: String },
-  status: { type: String, enum: STATUS, required: true }
-}, { timestamps: true });
+const ServiceOrderSchema = new mongoose.Schema(
+  {
+    stationId: {
+      type: String,
+      required: true,
+      trim: true,
+      index: true
+    },
+    title: {
+      type: String,
+      required: true,
+      trim: true
+    },
+    description: {
+      type: String,
+      trim: true
+    },
+    status: {
+      type: String,
+      enum: ['PENDING', 'IN_PROGRESS', 'COMPLETED', 'CANCELLED'],
+      default: 'PENDING',
+      index: true
+    },
+    createdBy: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User',
+      required: true
+    }
+  },
+  {
+    timestamps: true
+  }
+);
 
-module.exports = mongoose.model('ServiceOrder', schema);
+module.exports = mongoose.model('ServiceOrder', ServiceOrderSchema);
