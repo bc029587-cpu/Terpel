@@ -10,7 +10,7 @@ async function createServiceOrder(data, userId) {
   });
 }
 
-async function getAllServiceOrders(filters = {}) {
+async function getAllServiceOrders(filters = {}, options = {}) {
   const query = {};
 
   // Filtro por stationId
@@ -21,6 +21,24 @@ async function getAllServiceOrders(filters = {}) {
   // Filtro por status
   if (filters.status) {
     query.status = filters.status;
+  }
+
+  // Si vienen opciones de paginación
+  const page = parseInt(options.page, 10) || null;
+  const limit = parseInt(options.limit, 10) || null;
+
+  if (page && limit) {
+    const skip = (page - 1) * limit;
+    const [total, data] = await Promise.all([
+      ServiceOrder.countDocuments(query),
+      ServiceOrder.find(query)
+        .populate('createdBy', 'email role')
+        .sort({ createdAt: -1 })
+        .skip(skip)
+        .limit(limit)
+    ]);
+
+    return { total, data };
   }
 
   const orders = await ServiceOrder.find(query)

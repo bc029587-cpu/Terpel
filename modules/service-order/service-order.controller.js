@@ -97,7 +97,17 @@ async function findById(req, res, next) {
 
 async function updateStatus(req, res, next) {
   try {
-    const { status } = req.body;
+    const { status } = req.body || {};
+
+    if (!status) {
+      return res.status(400).json({ message: 'Debe proporcionar el campo "status" en el body' });
+    }
+
+    const validStatuses = ['PENDING', 'IN_PROGRESS', 'COMPLETED', 'CANCELLED'];
+    if (!validStatuses.includes(status)) {
+      return res.status(400).json({ message: `Status inválido. Valores permitidos: ${validStatuses.join(', ')}` });
+    }
+
     const order = await serviceOrderService.updateServiceOrderStatus(
       req.params.id,
       status
