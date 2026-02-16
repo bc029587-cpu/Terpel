@@ -1,6 +1,7 @@
 'use strict';
 
 const ServiceOrder = require('./service-order.model');
+const CustomError = require('../../utils/custom-error');
 
 async function createServiceOrder(data, userId) {
   return ServiceOrder.create({
@@ -37,7 +38,17 @@ async function updateServiceOrderStatus(id, status) {
   const order = await ServiceOrder.findById(id);
 
   if (!order) {
-    throw new Error('Service Order no encontrada');
+    throw new CustomError('Service Order no encontrada', 404);
+  }
+
+  // No permitir cambios si la orden está CANCELLED
+  if (order.status === 'CANCELLED') {
+    throw new CustomError('No se pueden realizar cambios: la orden está CANCELLED', 400);
+  }
+
+  // No permitir COMPLETED -> IN_PROGRESS
+  if (order.status === 'COMPLETED' && status === 'IN_PROGRESS') {
+    throw new CustomError('Transición inválida: no se permite COMPLETED -> IN_PROGRESS', 400);
   }
 
   order.status = status;

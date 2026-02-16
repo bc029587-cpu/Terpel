@@ -16,7 +16,34 @@ async function create(req, res, next) {
 
 async function findAll(req, res, next) {
   try {
+    const orders = await serviceOrderService.getAllServiceOrders();
+    
+    if (orders.length === 0) {
+      return res.status(404).json({ 
+        message: 'No se encontraron órdenes en la base de datos.',
+        data: [] 
+      });
+    }
+
+    res.json({
+      total: orders.length,
+      data: orders
+    });
+  } catch (error) {
+    next(error);
+  }
+}
+
+async function searchByFilters(req, res, next) {
+  try {
     const { stationId, status } = req.query;
+
+    // Validar que al menos un filtro esté presente
+    if (!stationId && !status) {
+      return res.status(400).json({ 
+        message: 'Debe proporcionar al menos un filtro: stationId o status' 
+      });
+    }
 
     // Construir objeto de filtros
     const filters = {};
@@ -36,7 +63,6 @@ async function findAll(req, res, next) {
 
     // Validar si se encontraron resultados
     if (orders.length === 0) {
-      // Mensaje diferente según qué se buscaba
       let message = 'No se encontraron órdenes en la base de datos.';
       if (stationId && status) {
         message = `No se encontraron órdenes para la estación "${stationId}" con estado "${status}".`;
@@ -106,6 +132,7 @@ async function remove(req, res, next) {
 module.exports = {
   create,
   findAll,
+  searchByFilters,
   findById,
   updateStatus,
   update,
