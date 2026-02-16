@@ -16,9 +16,23 @@ async function create(req, res, next) {
 
 async function findAll(req, res, next) {
   try {
+    // Soporta paginación opcional: ?page=1&limit=20
+    const page = req.query.page ? parseInt(req.query.page, 10) : null;
+    const limit = req.query.limit ? parseInt(req.query.limit, 10) : null;
+
+    if (page && limit) {
+      const result = await serviceOrderService.getAllServiceOrders({}, { page, limit });
+      return res.json({
+        total: result.total,
+        page,
+        limit,
+        data: result.data
+      });
+    }
+
     const orders = await serviceOrderService.getAllServiceOrders();
-    
-    if (orders.length === 0) {
+
+    if (!orders || orders.length === 0) {
       return res.status(404).json({ 
         message: 'No se encontraron órdenes en la base de datos.',
         data: [] 
