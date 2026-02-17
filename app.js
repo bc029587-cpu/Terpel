@@ -2,6 +2,8 @@
 
 const express = require('express');
 const cors = require('cors');
+const swaggerUi = require('swagger-ui-express');
+const swaggerSpecs = require('./config/swagger');
 
 const app = express();
 
@@ -26,7 +28,7 @@ app.use(requestId);
 ====================== */
 app.use(cors({
   origin: '*', // En producción se restringe
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Authorization', 'Content-Type']
 }));
 
@@ -39,6 +41,22 @@ app.get('/health', (req, res) => {
     message: 'API funcionando correctamente'
   });
 });
+
+/* ======================
+   Swagger API Documentation
+====================== */
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpecs, {
+  swaggerOptions: {
+    url: '/api-docs',
+    displayOperationId: true,
+    displayRequestDuration: true,
+    filter: true,
+    showExtensions: false,
+    docExpansion: 'list'
+  },
+  customCss: '.swagger-ui .topbar { display: none }',
+  customSiteTitle: 'Terpel API - Documentación de Service Orders'
+}));
 
 
 
