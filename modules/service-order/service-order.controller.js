@@ -4,6 +4,9 @@ const serviceOrderService = require('./service-order.service');
 
 async function create(req, res, next) {
   try {
+    if (!req.user || !req.user.id) {
+      return res.status(401).json({ error: 'Usuario no autenticado' });
+    }
     const order = await serviceOrderService.createServiceOrder(
       req.body,
       req.user.id

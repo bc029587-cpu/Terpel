@@ -7,7 +7,7 @@ const controller = require('./service-order.controller');
 const auth = require('../../middlewares/auth.middleware');
 
 // 🔐 protege TODO el módulo----------------------------reevisar protecciones------------------
-//router.use(auth);
+router.use(auth);
 
 /**
  * @swagger
