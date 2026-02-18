@@ -1,7 +1,7 @@
 'use strict';
 
 const jwt = require('jsonwebtoken');
-const config = require('../config'); // 🔑 Usar configuración centralizada
+const config = require('../config'); //  Usar configuración centralizada
 
 module.exports = (req, res, next) => {
   try {

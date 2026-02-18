@@ -5,11 +5,11 @@
  * 
  * Este archivo centraliza TODAS las variables de entorno.
  * Ventajas:
- * ✅ Un solo lugar donde buscar configuración
- * ✅ Validación automática de variables requeridas
- * ✅ Defaults seguros para desarrollo
- * ✅ Fácil agregar nuevas variables
- * ✅ Detección de errores en startup (no en runtime)
+ *  Un solo lugar donde buscar configuración
+ *  Validación automática de variables requeridas
+ *  Defaults seguros para desarrollo
+ *  Fácil agregar nuevas variables
+ *  Detección de errores en startup (no en runtime)
  */
 
 require('dotenv').config();
@@ -22,7 +22,7 @@ function requireEnv(key, defaultValue = undefined) {
   
   if (!value && defaultValue === undefined) {
     throw new Error(
-      `❌ Variable de entorno REQUERIDA no encontrada: ${key}\n` +
+      ` Variable de entorno REQUERIDA no encontrada: ${key}\n` +
       `   Asegúrate de definirla en tu archivo .env\n` +
       `   Ver .env.example para ejemplos`
     );
@@ -39,16 +39,16 @@ const VALID_ENVS = ['development', 'test', 'production'];
 
 if (!VALID_ENVS.includes(NODE_ENV)) {
   throw new Error(
-    `❌ NODE_ENV inválido: ${NODE_ENV}\n` +
+    ` NODE_ENV inválido: ${NODE_ENV}\n` +
     `   Valores permitidos: ${VALID_ENVS.join(', ')}`
   );
 }
 
 // ========================================
-// 🔐 CONFIGURACIÓN CENTRALIZADA
+//  CONFIGURACIÓN CENTRALIZADA
 // ========================================
 const config = {
-  // 🌍 GENERAL
+  //  GENERAL
   env: NODE_ENV,
   isDevelopment: NODE_ENV === 'development',
   isProduction: NODE_ENV === 'production',
@@ -76,7 +76,7 @@ const config = {
     }
   },
 
-  // 🔐 AUTENTICACIÓN
+  //  AUTENTICACIÓN
   auth: {
     jwt: {
       secret: requireEnv(
@@ -101,7 +101,7 @@ const config = {
     }
   },
 
-  // 🌐 CORS (Control de acceso)
+  //  CORS (Control de acceso)
   cors: {
     origin: process.env.ALLOWED_ORIGINS 
       ? process.env.ALLOWED_ORIGINS.split(',')
@@ -111,7 +111,7 @@ const config = {
     allowedHeaders: ['Content-Type', 'Authorization']
   },
 
-  // 📧 EMAIL (SMTP)
+  // EMAIL (SMTP)
   email: {
     enabled: process.env.SMTP_HOST ? true : false,
     host: process.env.SMTP_HOST,
@@ -131,14 +131,14 @@ const config = {
     football: process.env.FOOTBALL_DATA_API_KEY
   },
 
-  // 📊 LOGGING
+  //  LOGGING
   logging: {
     level: process.env.LOG_LEVEL || (NODE_ENV === 'production' ? 'info' : 'debug'),
     file: process.env.LOG_FILE || './logs/app.log',
     colorize: NODE_ENV !== 'production'
   },
 
-  // 🚀 MONITOREO (Sentry, NewRelic, etc)
+  //  MONITOREO (Sentry, NewRelic, etc)
   monitoring: {
     sentry: {
       enabled: process.env.SENTRY_DSN ? true : false,
@@ -148,7 +148,7 @@ const config = {
     }
   },
 
-  // 🛡️  SEGURIDAD
+  //   SEGURIDAD
   security: {
     rateLimit: {
       windowMs: 15 * 60 * 1000, // 15 minutos
@@ -173,7 +173,7 @@ const config = {
 // VALIDACIÓN EN DESARROLLO
 // ========================================
 if (NODE_ENV === 'development') {
-  console.log('✅ Configuración cargada:');
+  console.log(' Configuración cargada:');
   console.log(`   Ambiente: ${config.env}`);
   console.log(`   Puerto: ${config.server.port}`);
   console.log(`   BD: ${config.database.uri.split('@')[0]}...` );
@@ -192,13 +192,13 @@ if (NODE_ENV === 'production') {
 
   requiredVars.forEach(key => {
     if (!process.env[key]) {
-      console.error(`⚠️  Variable requerida en PRODUCCIÓN no configurada: ${key}`);
+      console.error(`  Variable requerida en PRODUCCIÓN no configurada: ${key}`);
     }
   });
 
   if (!process.env.JWT_SECRET || process.env.JWT_SECRET === 'supersecret') {
     throw new Error(
-      '🚨 SEGURIDAD CRÍTICA: JWT_SECRET no está configurado correctamente en producción!\n' +
+      ' SEGURIDAD CRÍTICA: JWT_SECRET no está configurado correctamente en producción!\n' +
       '   Configura una clave segura en tu variable de entorno JWT_SECRET'
     );
   }
