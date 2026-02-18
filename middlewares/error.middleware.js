@@ -1,3 +1,5 @@
+const config = require('../config'); // 🔑 Usar configuración centralizada
+
 module.exports = (err, req, res, next) => {
   const status = err.status || 500;
 
@@ -6,8 +8,8 @@ module.exports = (err, req, res, next) => {
     requestId: req.requestId
   };
 
-  // En entornos de desarrollo incluir stack para facilitar debugging
-  if (process.env.NODE_ENV !== 'production') {
+  // En desarrollo incluir stack para facilitar debugging
+  if (config.isDevelopment) {
     payload.stack = err.stack;
   }
 

@@ -1,0 +1,65 @@
+# ========================================
+# 🔐 VARIABLES DE ENTORNO (SECRETOS)
+# ========================================
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+.env.production
+
+# ========================================
+# 📦 DEPENDENCIAS
+# ========================================
+node_modules/
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+
+# ========================================
+# 🔍 IDE / EDITOR
+# ========================================
+.vscode/settings.json
+.vscode/launch.json
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# ========================================
+# 📊 LOGS
+# ========================================
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# ========================================
+# 🔧 BUILD / DIST
+# ========================================
+dist/
+build/
+out/
+
+# ========================================
+# 🧪 TESTING
+# ========================================
+coverage/
+.nyc_output/
+
+# ========================================
+# 🚀 OS SPECIFIC
+# ========================================
+.DS_Store
+Thumbs.db
+*.exe
+*.dll
+
+# ========================================
+# 📝 TEMPORAL
+# ========================================
+*.tmp
+*.bak
+*.temp

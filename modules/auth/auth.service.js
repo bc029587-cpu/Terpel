@@ -3,8 +3,7 @@
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const userService = require('../users/user.service');
-
-const JWT_SECRET = process.env.JWT_SECRET || 'supersecret';
+const config = require('../../config'); // 🔑 Usar configuración centralizada
 
 async function login(email, password) {
   const user = await userService.findByEmail(email);
@@ -25,8 +24,8 @@ async function login(email, password) {
       email: user.email,
       role: user.role
     },
-    JWT_SECRET,
-    { expiresIn: '1h' }
+    config.auth.jwt.secret,
+    { expiresIn: config.auth.jwt.expiration }
   );
 
   return token;
@@ -40,7 +39,7 @@ async function register(email, password, name) {
   }
 
   // Encriptar contraseña
-  const passwordHash = await bcrypt.hash(password, 10);
+  const passwordHash = await bcrypt.hash(password, config.security.bcrypt.rounds);
 
   // Crear usuario
   const user = await userService.createUser({

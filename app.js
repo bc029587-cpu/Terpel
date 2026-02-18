@@ -4,6 +4,7 @@ const express = require('express');
 const cors = require('cors');
 const swaggerUi = require('swagger-ui-express');
 const swaggerSpecs = require('./config/swagger');
+const config = require('./config'); // 🔑 Importar configuración centralizada
 
 const app = express();
 
@@ -21,15 +22,14 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json({ limit: '50mb' }));
 app.use(requestId);
 
-
-
 /* ======================
-   CORS (usando librería)
+   CORS (Usando configuración centralizada)
 ====================== */
 app.use(cors({
-  origin: '*', // En producción se restringe
-  methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Authorization', 'Content-Type']
+  origin: config.cors.origin,
+  credentials: config.cors.credentials,
+  methods: config.cors.methods,
+  allowedHeaders: config.cors.allowedHeaders
 }));
 
 /* ======================
@@ -38,7 +38,9 @@ app.use(cors({
 app.get('/health', (req, res) => {
   res.status(200).json({
     status: 'UP',
-    message: 'API funcionando correctamente'
+    message: 'API funcionando correctamente',
+    timestamp: new Date().toISOString(),
+    environment: config.env
   });
 });
 
@@ -58,8 +60,6 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpecs, {
   customSiteTitle: 'Terpel API - Documentación de Service Orders'
 }));
 
-
-
 // Endpoint protegido de prueba
 app.get('/api/protected', authMiddleware, (req, res) => {
   res.json({
@@ -76,9 +76,11 @@ app.use('/api/service-orders', serviceOrderRoutes);
 app.use('/api/users', userRoutes);
 
 // Log de diagnóstico
-console.log('✓ Auth router montado en /api/auth');
-console.log('✓ Service Orders router montado en /api/service-orders');
-console.log('✓ Users router montado en /api/users');
+if (config.isDevelopment) {
+  console.log('✓ Auth router montado en /api/auth');
+  console.log('✓ Service Orders router montado en /api/service-orders');
+  console.log('✓ Users router montado en /api/users');
+}
 
 // Middleware 404 explícito
 app.use((req, res) => {
