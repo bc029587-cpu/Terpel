@@ -1,7 +1,19 @@
 'use strict';
 
+/**
+ * CAPA: Configuration (Swagger/OpenAPI)
+ * ARCHIVO: swagger.js
+ * DESCRIPCIÓN: Configuración de Swagger UI para documentación interactiva de API
+ * USO: Genera interfaz visual en /api-docs para probar endpoints
+ * HERRAMIENTA: swagger-jsdoc analiza comentarios @swagger en rutas y genera spec OpenAPI 3.0.0
+ */
+
 const swaggerJsdoc = require('swagger-jsdoc');
 
+/**
+ * CONFIGURACIÓN: Definición de especificación OpenAPI
+ * DESCRIPCIÓN: Parámetros que definen la API en Swagger
+ */
 const options = {
   definition: {
     openapi: '3.0.0',

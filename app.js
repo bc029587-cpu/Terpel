@@ -1,5 +1,12 @@
 'use strict';
 
+/**
+ * CAPA: Punto de entrada de la aplicación
+ * ARCHIVO: app.js
+ * DESCRIPCIÓN: Configura y estructura la aplicación Express
+ * FLUJO GENERAL: Imports → Middlewares globales → CORS → Rutas → Error handling
+ */
+
 const express = require('express');
 const cors = require('cors');
 const swaggerUi = require('swagger-ui-express');
@@ -16,14 +23,21 @@ const requestId = require('./middlewares/request-id.middleware');
 const errorHandler = require('./middlewares/error.middleware');
 
 /* ======================
-   Middlewares globales
+   CAPA: Middlewares globales
+   DESCRIPCIÓN: Se aplican a TODAS las requests
+   - urlencoded: Parsea datos en formularios
+   - json: Parsea JSON (max 50mb)
+   - requestId: Agrega ID único para trazabilidad
 ====================== */
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json({ limit: '50mb' }));
 app.use(requestId);
 
 /* ======================
-   CORS (Usando configuración centralizada)
+   CAPA: CORS Configuration
+   DESCRIPCIÓN: Controla qué orígenes pueden acceder a la API
+   RECIBE: Configuración de config.cors
+   ENVÍA: Headers CORS en respuestas
 ====================== */
 app.use(cors({
   origin: config.cors.origin,
@@ -33,7 +47,10 @@ app.use(cors({
 }));
 
 /* ======================
-   Rutas base
+   CAPA: Application Routes (Health Check)
+   DESCRIPCIÓN: Endpoint de prueba para verificar si la API está activa
+   ENTRADA: GET request
+   SALIDA: JSON con estado de la API
 ====================== */
 app.get('/health', (req, res) => {
   res.status(200).json({
@@ -45,7 +62,10 @@ app.get('/health', (req, res) => {
 });
 
 /* ======================
-   Swagger API Documentation
+   CAPA: API Documentation (Swagger)
+   DESCRIPCIÓN: Interfaz interactiva para probar endpoints
+   ENTRADA: GET /api-docs
+   SALIDA: HTML con documentación interactiva
 ====================== */
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpecs, {
   swaggerOptions: {
@@ -60,7 +80,13 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpecs, {
   customSiteTitle: 'Terpel API - Documentación de Service Orders'
 }));
 
-// Endpoint protegido de prueba
+/**
+ * CAPA: Application Routes (Protected Test)
+ * DESCRIPCIÓN: Endpoint para verificar autenticación
+ * ENTRADA: GET request con token JWT en header Authorization
+ * MIDDLEWARE: authMiddleware valida el token
+ * SALIDA: JSON con datos del usuario autenticado
+ */
 app.get('/api/protected', authMiddleware, (req, res) => {
   res.json({
     message: 'Accediste a un endpoint protegido',
@@ -69,7 +95,11 @@ app.get('/api/protected', authMiddleware, (req, res) => {
 });
 
 /* ======================
-   Rutas de módulos
+   CAPA: Rutas de módulos
+   DESCRIPCIÓN: Registra los routers de cada módulo en sus prefijos
+   - /api/auth: Autenticación (login, register)
+   - /api/service-orders: Órdenes de servicio (CRUD)
+   - /api/users: Gestión de usuarios (CRUD, cambio de contraseña)
 ====================== */
 app.use('/api/auth', authRoutes);
 app.use('/api/service-orders', serviceOrderRoutes);
@@ -82,7 +112,12 @@ if (config.isDevelopment) {
   console.log('✓ Users router montado en /api/users');
 }
 
-// Middleware 404 explícito
+/**
+ * CAPA: Error Handling
+ * DESCRIPCIÓN: Manejo de rutas 404 y errores globales
+ * 404 Handler: Responde cuando ninguna ruta coincide
+ * errorHandler: Captura y formatea todos los errores (debe ir al final)
+ */
 app.use((req, res) => {
   res.status(404).json({ error: 'Ruta no encontrada' });
 });
